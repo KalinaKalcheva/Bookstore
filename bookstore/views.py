@@ -25,6 +25,21 @@ def AuthorList(request):
 def BooksList(request):
     # get all authors
     books = Book.objects.all()
+
+    title = request.GET.get('title')
+    author = request.GET.get('author')
+    genre = request.GET.get('genre')
+
+    if title:
+        books = books.filter(title__icontains=title)
+
+    if author:
+        books = books.filter(author__last_name__icontains=author)
+
+    if genre:
+        books = books.filter(genre=genre)
+
+
     serializer = BookSerializer(books, many = True)
     return Response(serializer.data)
 
